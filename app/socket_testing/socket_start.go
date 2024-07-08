@@ -25,7 +25,7 @@ func processClient(connection net.Conn) {
 	_, err = connection.Write([]byte("Got your message!: " + message))
 
 }
-func startupWebsocket() {
+func StartupWebsocket() {
 	fmt.Println("Server Running...")
 	server, err := net.Listen(SERVER_TYPE, SOCKET_HOST+":"+SOCKET_PORT)
 	if err != nil {
@@ -44,7 +44,4 @@ func startupWebsocket() {
 		fmt.Println("client connected")
 		go processClient(connection)
 	}
-}
-func main() {
-	startupWebsocket()
 }

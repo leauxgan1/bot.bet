@@ -28,32 +28,22 @@ func getFrameworks(w http.ResponseWriter, r *http.Request) {
 
 }
 
-
-
-func main() {
-	var err error
+func setupDB()  {
+  var err error
 	db, err = sql.Open("postgres",CONNECTION_STRING)
 	if err != nil {
 		log.Fatal(err)
 	}
+}
 
-	defer db.Close()
-	err = db.Ping()
-	if err != nil {
-		log.Fatal(err)
-	}
 
-	port := "3000"
-
+func startServer() {
 	app := chi.NewRouter()
 	app.Use(middleware.RequestID)
 	app.Use(middleware.RealIP)
 	app.Use(middleware.Logger)
 	app.Use(middleware.Recoverer)
 	app.Use(middleware.Timeout(60 * time.Second))
-
-	fs := http.FileServer(http.Dir("./static/"))
-	app.Handle("/game/*", http.StripPrefix("/game/",fs))
 
 	app.Get("/hi",func(w http.ResponseWriter,r *http.Request) {
 		_, err := w.Write([]byte("Hello"))
@@ -69,7 +59,23 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
 
+func main() {
+	var err error
+
+	//  setupDB()
+	// defer db.Close()
+	// err = db.Ping()
+	// if err != nil {
+	//    log.Fatal(err)
+	// }
+
+	port := "3000"
+
+  startServer()
+  
+  StartSocket()
 
 }
 
